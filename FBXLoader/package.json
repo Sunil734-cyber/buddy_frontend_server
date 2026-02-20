@@ -1,0 +1,27 @@
+{
+  "name": "fbxloader-modular",
+  "version": "1.0.0",
+  "description": "Modular FBX loader for Three.js with clean architecture",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "dependencies": {
+    "three": "^0.160.0",
+    "fflate": "^0.8.0"
+  },
+  "peerDependencies": {
+    "three": ">=0.140.0"
+  },
+  "keywords": [
+    "threejs",
+    "fbx",
+    "loader",
+    "3d",
+    "animation",
+    "model"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -821,10 +821,11 @@ document.addEventListener('click', (e) => {
     
     // Add this function
     function fetchAIResponse(message) {
-  console.log("Sending AI request to:", "https://newone-yzub.onrender.com/chatbot/");
+  const chatbotUrl = window.AI_CHATBOT_URL || "https://newone-yzub.onrender.com/chatbot/";
+  console.log("Sending AI request to:", chatbotUrl);
   console.log("Message:", message);
   
-  fetch("https://newone-yzub.onrender.com/chatbot/", {
+  fetch(chatbotUrl, {
     method: "POST",
     mode: "cors",
     headers: {

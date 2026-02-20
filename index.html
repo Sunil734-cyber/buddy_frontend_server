@@ -7,76 +7,128 @@
     <meta name="theme-color" content="#4a86e8">
     <link rel="icon" type="image/png" href="Buddy.png">
     <title>Buddy.io</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'console-green': '#e0e8e0',
+              'buddy-blue': '#4a86e8',
+              'buddy-blue-light': '#5a96f8',
+              'buddy-blue-dark': '#3a76d8',
+            },
+            fontFamily: {
+              'glitch': ['Rubik Glitch', 'sans-serif'],
+            },
+            spacing: {
+              '15': '60px',
+              '30': '120px',
+              '75': '300px'
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom styles for progress bar gradient */
+      .progress-gradient::-webkit-progress-bar {
+        background-color: #374151;
+        border-radius: 0.75rem;
+      }
+      .progress-gradient::-webkit-progress-value {
+        background: linear-gradient(to right, #4a86e8, #5a96f8);
+        border-radius: 0.75rem;
+      }
+      .progress-gradient::-moz-progress-bar {
+        background: linear-gradient(to right, #4a86e8, #5a96f8);
+        border-radius: 0.75rem;
+      }
+    </style>
 </head>
-<body>
+<body class="m-0 overflow-hidden font-sans antialiased touch-manipulation">
   <!-- UI Elements -->
-  <div id="ui-container">
-    <!-- Add mode toggle bar -->
-    <div id="mode-toggle-container">
-      <div class="mode-indicator world" id="mode-indicator"></div>
-      <div class="mode-label">Mode:</div>
-      <button id="world-mode-btn" class="mode-btn active">World Mode</button>
-      <button id="single-mode-btn" class="mode-btn">Single Mode</button>
+  <div class="absolute inset-0 pointer-events-none z-[100]" id="ui-container">
+    <!-- Mode toggle bar -->
+    <div class="absolute top-2.5 left-1/2 transform -translate-x-1/2 z-[1000] flex bg-black/85 border-2 border-gray-700 rounded-3xl p-1 shadow-xl pointer-events-auto" id="mode-toggle-container">
+      <div class="absolute top-1/2 left-2.5 transform -translate-y-1/2 w-3 h-3 rounded-full bg-green-400 shadow-lg shadow-green-400/50" id="mode-indicator"></div>
+      <div class="ml-5 text-sm flex items-center text-console-green">Mode:</div>
+      <button id="world-mode-btn" class="px-5 py-2 border-none bg-transparent text-console-green cursor-pointer rounded-2xl font-bold transition-all duration-300 hover:bg-buddy-blue/30 active:bg-buddy-blue active:shadow-lg active:shadow-buddy-blue/70">World Mode</button>
+      <button id="single-mode-btn" class="px-5 py-2 border-none bg-transparent text-console-green cursor-pointer rounded-2xl font-bold transition-all duration-300 hover:bg-buddy-blue/30 bg-buddy-blue shadow-lg shadow-buddy-blue/70">Single Mode</button>
     </div>
-      <div id="info-panel">i</div>
-<div id="info-content">
-  <button id="close-info">&times;</button>
-  <h3>Buddy.io Info</h3>
-  <p><strong>Single Mode:</strong> In a single-player mode only you can interact with your avatar in a private space.</p>
-  <p><strong>World Mode:</strong> In this mode, any user who has opted the world mode can join and interact with you and chat . It's a shared space designed for multiplayer fun.</p>
-  <p><strong>Note:</strong> The user interface supports up to 3 avatars in world mode and right now is designed for big screens interfaces. Anyone can join—have fun!</p>
-</div>
     
-<div id="login-panel" class="panel">
-  <h2>WeLcome to Buddyyy !!</h2>
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-    <label for="username-input" style="white-space: nowrap;">Buddy Name :</label>
-    <input type="text" id="username-input" placeholder="ABC...." style="width: 180px;">
-  </div>
-  <div>
-    <button id="login-button">Talk to buddy</button>
-  </div>
-</div>
-    <div id="social-panel" class="panel">
-      <div class="panel-header">Online Players</div>
-      <div class="panel-content" id="social-content">
-        <div id="user-list"></div>
+    <!-- Info panel -->
+    <div class="absolute top-2.5 left-2.5 w-10 h-10 bg-black/85 border-2 border-gray-700 rounded-full flex items-center justify-center cursor-pointer z-[1000] pointer-events-auto text-buddy-blue font-bold text-xl shadow-lg shadow-black/30 hover:bg-gray-800/90 hover:scale-110 transition-transform" id="info-panel">i</div>
+    
+    <!-- Info content modal -->
+    <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/95 border-2 border-buddy-blue rounded-xl p-5 max-w-[80%] w-96 max-h-[80vh] overflow-y-auto z-[1001] hidden shadow-xl shadow-black/50 text-white" id="info-content">
+      <button class="absolute top-2.5 right-2.5 bg-none border-none text-console-green text-xl cursor-pointer" id="close-info">&times;</button>
+      <h3 class="text-buddy-blue mt-0 border-b border-buddy-blue pb-2.5">Buddy.io Info</h3>
+      <p class="mb-4 leading-relaxed"><strong>Single Mode:</strong> In a single-player mode only you can interact with your avatar in a private space.</p>
+      <p class="mb-4 leading-relaxed"><strong>World Mode:</strong> In this mode, any user who has opted the world mode can join and interact with you and chat . It's a shared space designed for multiplayer fun.</p>
+      <p class="mb-4 leading-relaxed"><strong>Note:</strong> The user interface supports up to 3 avatars in world mode and right now is designed for big screens interfaces. Anyone can join—have fun!</p>
+    </div>
+    
+    <!-- Login panel -->
+    <div class="w-[90%] max-w-80 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-5 box-border bg-black/95 border-2 border-buddy-blue rounded-xl shadow-xl shadow-buddy-blue/50 text-center pointer-events-auto" id="login-panel">
+      <h2 class="text-buddy-blue mb-5 text-2xl drop-shadow-lg">WeLcome to Buddyyy !!</h2>
+      <div class="flex items-center gap-2.5 mb-4">
+        <label for="username-input" class="whitespace-nowrap text-console-green">Buddy Name :</label>
+        <input type="text" id="username-input" placeholder="ABC...." 
+               class="px-4 py-3 my-2.5 border-2 border-gray-700 rounded-lg bg-black/40 text-console-green text-base box-border focus:border-buddy-blue focus:outline-none focus:shadow-lg focus:shadow-buddy-blue/50 w-44">
+      </div>
+      <div>
+        <button id="login-button" 
+                class="bg-gradient-to-br from-buddy-blue to-buddy-blue-dark text-white border-none px-6 py-3 rounded-lg text-base font-bold cursor-pointer transition-all duration-300 mt-2.5 shadow-lg shadow-black/30 hover:from-buddy-blue-light hover:to-buddy-blue hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/40 active:translate-y-0">
+          Talk to buddy
+        </button>
       </div>
     </div>
     
-    <div id="chat-panel" class="panel">
-      <div class="panel-header">Chat with online players</div>
-      <div class="panel-content" id="chat-content">
-        <div id="chat-messages"></div>
-        <div style="display: flex; align-items: center;">
-          <input type="text" id="chat-input" placeholder="Type a message...">
-          <button id="send-button">&#x27A4;</button>
+    <!-- Social panel -->
+    <div class="w-30 absolute left-2.5 top-2.5 hidden cursor-pointer transition-all duration-300 p-4 text-center rounded-lg bg-black/85 text-console-green border-2 border-gray-700 shadow-xl pointer-events-auto hover:bg-gray-800/90 hover:scale-105" id="social-panel">
+      <div class="font-bold mb-4 select-none text-base text-buddy-blue drop-shadow-sm border-b-2 border-buddy-blue pb-2 text-center tracking-wide">Online Players</div>
+      <div class="hidden" id="social-content">
+        <div class="max-h-48 overflow-y-auto" id="user-list"></div>
+      </div>
+    </div>
+    
+    <!-- Chat panel -->
+    <div class="w-30 absolute right-2.5 top-2.5 hidden h-auto font-glitch cursor-pointer transition-all duration-300 p-4 text-left rounded-lg bg-black/85 text-console-green border-2 border-gray-700 shadow-xl pointer-events-auto hover:bg-gray-800/90 hover:scale-105" id="chat-panel">
+      <div class="font-bold mb-4 select-none text-base text-buddy-blue drop-shadow-sm border-b-2 border-buddy-blue pb-2 text-center tracking-wide">Chat with online players</div>
+      <div class="hidden text-left" id="chat-content">
+        <div class="h-48 overflow-y-auto mb-2.5 p-2.5 bg-black/30 rounded-md border border-gray-600" id="chat-messages"></div>
+        <div class="flex items-center">
+          <input type="text" id="chat-input" placeholder="Type a message..." 
+                 class="flex-1 px-3 py-2.5 border-2 border-gray-600 rounded-md bg-black/40 text-console-green text-sm font-sans outline-none transition-all duration-300 mr-2 focus:border-buddy-blue focus:shadow-lg focus:shadow-buddy-blue/30 focus:bg-black/60 placeholder-gray-500 placeholder-italic">
+          <button id="send-button" 
+                  class="w-9 h-9 border-2 border-buddy-blue rounded-full bg-gradient-to-br from-buddy-blue to-buddy-blue-dark text-white text-base cursor-pointer transition-all duration-300 flex items-center justify-content-center flex-shrink-0 shadow-md shadow-black/30 hover:from-buddy-blue-light hover:to-buddy-blue hover:scale-105 hover:shadow-lg hover:shadow-black/40 active:scale-95">&#x27A4;</button>
         </div>
       </div>
     </div>
     
-    <div id="controls" class="panel">
- 
-
+    <!-- Controls panel -->
+    <div class="absolute bottom-2.5 left-1/2 transform -translate-x-1/2 hidden bg-black/85 text-console-green border-2 border-gray-700 rounded-md p-5 m-2.5 shadow-xl pointer-events-auto text-center" id="controls">
     </div>
     
-    <!-- Add this below the other panels -->
-    <div id="ai-chat-panel" class="panel" style="position: absolute; bottom: 60px; left: 10px; width: 300px; display: none;">
-      <h3>Talk with Buddy</h3>
-      <div id="ai-chat-messages" style="height: 150px; overflow-y: auto; margin-bottom: 10px;"></div>
-      <div style="display: flex;">
-        <input type="text" id="ai-chat-input" placeholder="Chat with Buddy..." style="flex-grow: 1;">
-        <button id="ai-send-button" style="margin-left: 5px;">&#x27A4;</button>
+    <!-- AI Chat panel -->
+    <div class="absolute bottom-15 left-2.5 w-75 hidden bg-black/95 border-2 border-buddy-blue shadow-lg shadow-buddy-blue/30 text-console-green border-2 border-gray-700 rounded-md p-5 m-2.5 shadow-xl pointer-events-auto text-center" id="ai-chat-panel">
+      <h3 class="text-buddy-blue text-center mb-4 text-lg drop-shadow-sm border-b-2 border-buddy-blue pb-2">Talk with Buddy</h3>
+      <div class="h-36 overflow-y-auto mb-2.5" id="ai-chat-messages"></div>
+      <div class="flex">
+        <input type="text" id="ai-chat-input" placeholder="Chat with Buddy..." 
+               class="w-full p-2.5 px-3 border-2 border-gray-600 rounded-md bg-black/40 text-console-green text-sm font-sans outline-none transition-all duration-300 mb-2 flex-grow focus:border-buddy-blue focus:shadow-lg focus:shadow-buddy-blue/30 focus:bg-black/60 placeholder-gray-500 placeholder-italic">
+        <button id="ai-send-button" 
+                class="w-9 h-9 border-2 border-buddy-blue rounded-full bg-gradient-to-br from-buddy-blue to-buddy-blue-dark text-white text-base cursor-pointer transition-all duration-300 flex items-center justify-center ml-1 shadow-md shadow-black/30 hover:from-buddy-blue-light hover:to-buddy-blue hover:scale-105 hover:shadow-lg hover:shadow-black/40 active:scale-95">&#x27A4;</button>
       </div>
     </div>
   </div>
 
   <!-- Loading Screen -->
-  <div id="loading">
-    <div>Loading 3D viewer...</div>
-    <div id="status">Initializing</div>
-    <progress id="progress" value="0" max="100"></progress>
+  <div class="fixed inset-0 bg-black/90 flex flex-col justify-center items-center text-white z-[10000] font-sans" id="loading">
+    <div class="my-2.5 text-lg text-center">Loading 3D viewer...</div>
+    <div class="my-2.5 text-lg text-center" id="status">Initializing</div>
+    <progress class="w-48 h-5 rounded-xl bg-gray-700 border-none outline-none progress-gradient" id="progress" value="0" max="100"></progress>
   </div>
 
   <!-- Three.js will render here -->

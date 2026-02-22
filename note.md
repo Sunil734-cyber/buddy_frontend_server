@@ -1,1 +1,0 @@
-1) about my application is buddy..it helps people with their loneliness..when they text it they get friendly replies,from it and there is world mode ,where anyone who joins can be in the server and text each other..the avatar reply with emotes also..suppose if a user sends hi the ai chat replies hi,the avatr does hi emote,

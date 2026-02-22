@@ -7,22 +7,11 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 
-// Add this for environment-based CORS
-const frontendUrl = process.env.FRONTEND_URL;
-
-// Strict CORS: only allow the configured frontend URL
-if (!frontendUrl) {
-  console.error('FRONTEND_URL is not set. CORS will reject all browser origins.');
-}
+// Use configured frontend URL for CORS
+const allowedOrigin = process.env.FRONTEND_URL;
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Strict: only allow exactly the configured frontend URL
-    if (!frontendUrl) return callback(new Error('FRONTEND_URL not configured'), false);
-    if (!origin) return callback(new Error('Origin not allowed'), false);
-    if (origin === frontendUrl) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'), false);
-  },
+  origin: allowedOrigin,
   credentials: true
 }));
 
@@ -34,15 +23,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// Configure Socket.IO with CORS limited to configured frontend URL
+// Configure Socket.IO CORS to the configured frontend URL
 const io = socketIO(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (!frontendUrl) return callback(new Error('FRONTEND_URL not configured'), false);
-      if (!origin) return callback(new Error('Origin not allowed'), false);
-      if (origin === frontendUrl) return callback(null, true);
-      return callback(new Error('Not allowed by CORS'), false);
-    },
+    origin: allowedOrigin,
     methods: ["GET", "POST"],
     credentials: true
   }

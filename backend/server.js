@@ -10,16 +10,19 @@ const server = http.createServer(app);
 // Add this for environment-based CORS
 const frontendUrl = process.env.FRONTEND_URL;
 
-const allowedOrigins = [
-  frontendUrl,
-  'http://localhost:3000',
-  'http://localhost:8000',
-  'https://thornyphonyorigin.onrender.com',
-  'https://*.onrender.com'
-];
+// Strict CORS: only allow the configured frontend URL
+if (!frontendUrl) {
+  console.error('FRONTEND_URL is not set. CORS will reject all browser origins.');
+}
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Strict: only allow exactly the configured frontend URL
+    if (!frontendUrl) return callback(new Error('FRONTEND_URL not configured'), false);
+    if (!origin) return callback(new Error('Origin not allowed'), false);
+    if (origin === frontendUrl) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'), false);
+  },
   credentials: true
 }));
 
@@ -31,10 +34,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// Configure Socket.IO with proper CORS
+// Configure Socket.IO with CORS limited to configured frontend URL
 const io = socketIO(server, {
   cors: {
-    origin: ["http://localhost:8000", "http://localhost:3000", "https://thornyphonyorigin.onrender.com", "https://*.onrender.com"],
+    origin: (origin, callback) => {
+      if (!frontendUrl) return callback(new Error('FRONTEND_URL not configured'), false);
+      if (!origin) return callback(new Error('Origin not allowed'), false);
+      if (origin === frontendUrl) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     methods: ["GET", "POST"],
     credentials: true
   }
